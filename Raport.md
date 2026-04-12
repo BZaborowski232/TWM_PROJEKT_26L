@@ -43,7 +43,7 @@ Aby zapewnić autorski charakter rozwiązania oraz mieć pełną kontrolę nad �
     3.  *FAIL_2:* Za mało płynu, nakrętka obecna.
     4.  *FAIL_3:* Za mało płynu i brak nakrętki.
 
-#### 4. Projekt techniczny rozwiązania (Pipeline)
+#### 4. Wstępny projekt techniczny rozwiązania (Pipeline)
 
 Ze względu na wybór architektury typu *end-to-end* (rodzina YOLO), struktura systemu opiera się na przepływie danych przez głęboką sieć neuronową. W odróżnieniu od metod klasycznych, proces ekstrakcji cech odbywa się wewnątrz modelu. Poniżej przedstawiamy schemat docelowego potoku przetwarzania (tzw. *Inference Pipeline*) dla pojedynczego zdjęcia, wskazując główne bloki obliczeniowe i przekazywane dane:
 
