@@ -30,10 +30,6 @@ W przemyśle rozlewniczym i farmaceutycznym problem ten rozwiązywany jest na dw
     * *Mocne strony:* Ogromna odporność na zmiany oświetlenia, odblaski, rotację obiektów czy szum w tle. Nie wymagają ręcznego definiowania cech.
     * *Słabe strony:* Znacznie wyższe zapotrzebowanie na moc obliczeniową, "czarna skrzynka" (trudność w interpretacji błędów), konieczność zebrania i opisania (anotacji) potężnego zbioru danych.
 
-**Wybór technologiczny:** W naszym projekcie decydujemy się na wybór biblioteki OpenCV. Pozwoli nam to na zaprojektowanie w pełni autorskiego potoku przetwarzania (pipeline) krok po kroku, co jest kluczowym wymogiem projektu, bez konieczności polegania na gotowych architekturach sieci "end-to-end".
-
-#### ALTERNATYWNIE:
-
 **Wybór technologiczny:** W naszym projekcie decydujemy się na wykorzystanie systemu typu end-to-end opartego na głębokich sieciach neuronowych (np. architektura z rodziny YOLO). Zgodnie z wytycznymi przedmiotu, nasz wkład autorski zostanie zrealizowany w dwóch kluczowych obszarach. Po pierwsze, poprzez samodzielną akwizycję i manualną anotację (etykietowanie) dedykowanego zbioru statycznych zdjęć obrazujących defekty butelek. Po drugie, poprzez przeprowadzenie pogłębionej, krytycznej analizy rezultatów działania wytrenowanego modelu. W raporcie końcowym skupimy się na ewaluacji metryk skuteczności (m.in. Precision, Recall, mAP) oraz szczegółowej analizie przypadków błędnej klasyfikacji (Macierz Pomyłek - Confusion Matrix), co pozwoli na rzetelną ocenę ograniczeń wybranej sieci w zadaniach przemysłowej inspekcji optycznej.
 
 
@@ -49,7 +45,33 @@ Aby zapewnić autorski charakter rozwiązania oraz mieć pełną kontrolę nad �
 
 #### 4. Projekt techniczny rozwiązania (Pipeline)
 
-Pytanie czy chcemy opierac sie na czyms gotowym czy tworzyc cos swojego tak jak napisalem w linijce 33.
+Ze względu na wybór architektury typu *end-to-end* (rodzina YOLO), struktura systemu opiera się na przepływie danych przez głęboką sieć neuronową. W odróżnieniu od metod klasycznych, proces ekstrakcji cech odbywa się wewnątrz modelu. Poniżej przedstawiamy schemat docelowego potoku przetwarzania (tzw. *Inference Pipeline*) dla pojedynczego zdjęcia, wskazując główne bloki obliczeniowe i przekazywane dane:
+
+**1. Moduł Akwizycji i Wczytywania Danych (Data Ingestion)**
+* **Działanie:** System wsadowo (batch processing) pobiera statyczne obrazy z wcześniej przygotowanego katalogu testowego na dysku.
+* **Dane wejściowe:** Plik graficzny (np. .jpg, .png).
+* **Dane wyjściowe (przekazywane dalej):** Surowa macierz pikseli (obraz w przestrzeni RGB).
+
+**2. Moduł Pre-processingu (Przygotowanie dla Sieci)**
+* **Działanie:** Dostosowanie surowego obrazu do wymogów wejściowych sieci neuronowej. Obraz jest skalowany (np. do rozdzielczości 640x640 pikseli z zachowaniem proporcji - *letterboxing*) oraz poddawany normalizacji (wartości pikseli z zakresu 0-255 są rzutowane na zakres 0.0 - 1.0).
+* **Algorytmy:** Interpolacja dwuliniowa (skalowanie), operacje macierzowe.
+* **Dane wyjściowe:** Znormalizowany tensor wielowymiarowy (reprezentacja matematyczna obrazu gotowa do wejścia w sieć).
+
+**3. Rdzeń Obliczeniowy – Inferencja Modelu (YOLO)**
+* **Działanie:** Przekazanie tensora przez ukryte warstwy wytrenowanej, głębokiej sieci neuronowej. Sieć "end-to-end" jednocześnie dokonuje ekstrakcji cech (tzw. *backbone*) i predykcji lokalizacji oraz klas obiektów (tzw. *head*).
+* **Algorytmy:** Splotowe sieci neuronowe (CNN), funkcje aktywacji, propagacja w przód (Forward Pass).
+* **Dane wyjściowe:** Surowy wektor predykcji. Zawiera on dziesiątki tysięcy potencjalnych dopasowań, z których każde składa się z: współrzędnych *Bounding Boxa* (x_center, y_center, width, height), pewności detekcji (Confidence Score) oraz prawdopodobieństw przynależności do zdefiniowanych klas (np. `bottle_ok`, `missing_cap`, `low_liquid`).
+
+**4. Moduł Post-processingu (Filtrowanie Wyników)**
+* **Działanie:** Oczyszczenie surowych wyników z sieci. Odrzucane są detekcje o zbyt niskiej pewności, a powielone ramki dla tego samego obiektu są redukowane do jednej, najbardziej trafnej.
+* **Algorytmy:** Progowanie ufności (Confidence Thresholding) oraz NMS (*Non-Maximum Suppression* - tłumienie wartości niemaksymalnych).
+* **Dane wyjściowe:** Ostateczna, przefiltrowana lista wykrytych obiektów na zdjęciu wraz z ich etykietami i współrzędnymi.
+
+**5. Moduł Agregacji, Wizualizacji i Oceny**
+* **Działanie:** Nałożenie wyników na oryginalny obraz (narysowanie kolorowych ramek i etykiet). Dodatkowo, w trybie testowym, system porównuje predykcje z naszymi ręcznymi anotacjami (tzw. *Ground Truth*), aby wyliczyć statystyki błędów.
+* **Algorytmy obliczeniowe (Wkład autorski):** Generowanie Macierzy Pomyłek (*Confusion Matrix*), obliczanie metryk: *Precision*, *Recall*, *mAP* (mean Average Precision).
+* **Dane wyjściowe:** Zapisany plik graficzny z detekcjami oraz wygenerowane raporty statystyczne i wykresy skuteczności modelu dla każdej z klas defektów.
+
 
 ## ETAP 2: Prototyp rozwiązania
 *(Do uzupełnienia do 6 maja)*
