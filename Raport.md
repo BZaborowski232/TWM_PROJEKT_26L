@@ -34,14 +34,16 @@ W przemyśle rozlewniczym i farmaceutycznym problem ten rozwiązywany jest na dw
 
 
 
-#### 3. Zbiór danych (Dataset)
-Aby zapewnić autorski charakter rozwiązania oraz mieć pełną kontrolę nad środowiskiem testowym, zbiór danych zostanie wygenerowany samodzielnie.
-* **Forma danych:** Zdjęcia w formacie .jpg przedstawiające zasymulowany ruch taśmociągu z butelkami.
-* **Zróżnicowanie próbek:** Zbiór będzie obejmował cztery główne scenariusze (klasy testowe):
-    1.  *PASS:* Butelka pełna, z nakrętką (wzorzec).
-    2.  *FAIL_1:* Brak nakrętki, poprawny poziom płynu.
-    3.  *FAIL_2:* Za mało płynu, nakrętka obecna.
-    4.  *FAIL_3:* Za mało płynu i brak nakrętki.
+### 3. Zbiór danych (Dataset)
+Planujemy wykorzystanie, ogólnodostępnego zbioru obrazów z platformy Kaggle: *"Water Bottle Defect-Level Detection Dataset"*. Zbiór ten został stworzony specjalnie z myślą o trenowaniu modeli detekcji obiektów i świetnie symuluje warunki przemysłowej inspekcji optycznej.
+
+* **Źródło datasetu:** Platforma Kaggle (https://www.kaggle.com/datasets/jihadakbr/water-bottle-defect-level-detection-dataset).
+* **Charakterystyka obrazów:** Zbiór zawiera statyczne zdjęcia przedstawiające butelki z wodą, różniące się między sobą dwoma kluczowymi parametrami: poziomem napełnienia płynem oraz obecnością nakrętki. Obrazy posiadają różne warunki oświetleniowe, co pozwoli wytrenować bardziej uogólniony i odporny model.
+* **Format anotacji:** Do zdjęć dołączone są gotowe etykiety obiektów (tzw. *Bounding Boxes*). Wskazują one dokładne współrzędne na obrazie, gdzie znajduje się butelka lub konkretny defekt, w formacie wymaganym przez architekturę YOLO (pliki tekstowe zawierające ID klasy i znormalizowane współrzędne).
+* **Struktura i podział danych:** Dataset posiada gotową strukturę katalogów niezbędną do przeprowadzenia prawidłowego procesu Głębokiego Uczenia, z podziałem na dwa główne podkatalogi:
+    * **`train` (Zbiór treningowy):** Główna część danych, używana bezpośrednio do trenowania sieci. Na tych zdjęciach model optymalizuje swoje wagi i uczy się rozpoznawać cechy charakterystyczne defektów.
+    * **`val` (Zbiór walidacyjny):** Odseparowana, mniejsza paczka zdjęć, na której sieć nie uczy się bezpośrednio, lecz rozwiązuje je jako "testy próbne" po każdej epoce treningowej. Służy do monitorowania postępów i zapobiegania zjawisku przeuczenia (*overfitting*).
+**Przygotowanie do ewaluacji:** W ramach przygotowania potoku danych, ze zbioru `val` wydzielona zostanie trzecia część zbiór `test` (testowy). Będzie on użyty wyłącznie na samym końcu projektu do wygenerowania statystyk skuteczności (Macierz Pomyłek) i obiektywnej, rzetelnej oceny wytrenowanego systemu.
 
 #### 4. Wstępny projekt techniczny rozwiązania (Pipeline)
 
