@@ -1,9 +1,9 @@
 # TWM - Techniki Widzenia Maszynowego - Projekt 26L
 ## Temat: "Optyczna inspekcja obiektów na taśmociągu"
 ### Zespół:
-* Piotr Walczak
-* Katarzyna Wawer
-* Bartosz Zaborowski
+* Piotr Walczak 315220
+* Katarzyna Wawer 311683
+* Bartosz Zaborowski 319996
 
 ### ETAP 1 - Założenia wstepne projektu
 
@@ -44,6 +44,21 @@ Projekt opiera się na ogólnodostępnym, specjalistycznym zbiorze obrazów z pl
     * **`val` (Zbiór walidacyjny):** Wydzielona paczka danych używana wewnętrznie przez algorytm w trakcie procesu uczenia (po każdej tzw. epoce). Rozwiązywanie tego zbioru pozwala monitorować metryki w czasie rzeczywistym i skutecznie zapobiegać zjawisku przeuczenia (*overfitting*).
     * **`test` (Zbiór testowy):** Ze względu na brak dedykowanego zbioru testowego w oryginalnych danych, dohierzemy reprezentatywną próbkę obrazów (wraz z ukrytymi dla modelu etykietami docelowymi) do osobnego katalogu. Zbiór ten zostanie całkowicie wyłączony z procesu treningu. Wykorzystamy go wyłącznie na samym końcu projektu do weryfikacji wyników wytrenowanego modelu. Pozwoli to na obiektywne zestawienie wyników sieci z rzeczywistością i wygenerowanie statystyk, w tym Macierzy Pomyłek.
 
+Poniżej prezentujemy wybrane poglądowe zdjęcia z datasetu aby zobrazować jego przekrój:
+
+* **Uszkodzona etykieta:**
+![](images/train/damaged_label_0099_20260210_151750.jpg)
+
+* **Zanieczyszczenia:**
+![](images/train/debris_0107_20260210_150528.jpg)
+
+* **Uszkodzona nakrętka:**
+![](images/train/loose_cap_0046_20260210_152220.jpg)
+
+* **Dobra butelka:**
+![](images/train/good_0563_20260210_131754.jpg)
+
+
 #### 4. Wstępny projekt techniczny rozwiązania (Pipeline)
 
 Ze względu na wybór architektury typu *end-to-end* (rodzina YOLO), struktura systemu opiera się na przepływie danych przez głęboką sieć neuronową. W odróżnieniu od metod klasycznych, proces ekstrakcji cech odbywa się wewnątrz modelu. Poniżej przedstawiamy schemat docelowego potoku przetwarzania (tzw. *Inference Pipeline*) dla pojedynczego zdjęcia, wskazując główne bloki obliczeniowe i przekazywane dane:
@@ -73,15 +88,5 @@ Ze względu na wybór architektury typu *end-to-end* (rodzina YOLO), struktura s
 * **Algorytmy obliczeniowe (Wkład autorski):** Generowanie Macierzy Pomyłek (*Confusion Matrix*), obliczanie metryk: *Precision*, *Recall*, *mAP* (mean Average Precision).
 * **Dane wyjściowe:** Zapisany plik graficzny z detekcjami oraz wygenerowane raporty statystyczne i wykresy skuteczności modelu dla każdej z klas defektów.
 
+W celu zapewnienia obiektywnego punktu odniesienia dla wyników sieci YOLO, zaimplementowany zostanie dodatkowy, klasyczny moduł weryfikacji. Będzie on działał przykładowo w oparciu o statyczne wydzielenie obszaru zainteresowania (ROI), a detekcja defektów takich oprze się na prostej analizie cech pikseli, takich jak odchylenia w histogramie kolorów (np. w przestrzeni HSV). Takie podejście pozwoli na pporównaniu podejść i udowodnieniu, że dla specyficznych, prostych wizualnie defektów metody klasyczne mogą stanowić znacznie szybszą i bardziej zoptymalizowaną obliczeniowo alternatywę dla złożonych modeli typu end-to-end.
 
-## ETAP 2: Prototyp rozwiązania
-*(Do uzupełnienia do 6 maja)*
-* [ ] Kod implementujący wczytywanie wideo.
-* [ ] Działający pre-processing i prosta segmentacja.
-
-## ETAP 3: Wyniki, testy i raport końcowy
-*(Do uzupełnienia do 10 czerwca)*
-* [ ] Opis działania zaimplementowanego systemu na podstawie gotowego kodu.
-* [ ] Wyniki testów skuteczności na nagranym zbiorze danych.
-* [ ] Analiza statystyczna (False Positives, False Negatives).
-* [ ] Krytyczna analiza wyników i wnioski.
