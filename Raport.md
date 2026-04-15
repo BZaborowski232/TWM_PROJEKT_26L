@@ -90,3 +90,14 @@ Ze względu na wybór architektury typu *end-to-end* (rodzina YOLO), struktura s
 
 W celu zapewnienia obiektywnego punktu odniesienia dla wyników sieci YOLO, zaimplementowany zostanie dodatkowy, klasyczny moduł weryfikacji. Będzie on działał przykładowo w oparciu o statyczne wydzielenie obszaru zainteresowania (ROI), a detekcja defektów takich oprze się na prostej analizie cech pikseli, takich jak odchylenia w histogramie kolorów (np. w przestrzeni HSV). Takie podejście pozwoli na pporównaniu podejść i udowodnieniu, że dla specyficznych, prostych wizualnie defektów metody klasyczne mogą stanowić znacznie szybszą i bardziej zoptymalizowaną obliczeniowo alternatywę dla złożonych modeli typu end-to-end.
 
+## ETAP 2: Prototyp rozwiązania
+*(Do uzupełnienia do 6 maja)*
+* [ ] Kod implementujący wczytywanie wideo.
+* [ ] Działający pre-processing i prosta segmentacja.
+
+## ETAP 3: Wyniki, testy i raport końcowy
+*(Do uzupełnienia do 10 czerwca)*
+* [ ] Opis działania zaimplementowanego systemu na podstawie gotowego kodu.
+* [ ] Wyniki testów skuteczności na nagranym zbiorze danych.
+* [ ] Analiza statystyczna (False Positives, False Negatives).
+* [ ] Krytyczna analiza wyników i wnioski.
