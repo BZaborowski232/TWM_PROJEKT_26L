@@ -93,30 +93,8 @@ W celu zapewnienia obiektywnego punktu odniesienia dla wyników sieci YOLO, zaim
 
 ## ETAP 2: Prototyp rozwiązania
 *(Do uzupełnienia do 6 maja)*
-* [ ] Kod implementujący wczytywanie wideo.
+* [x] Wczytywanie i przetwarzanie obrazów ze zbioru danych.
 * [x] Działający pre-processing i prosta segmentacja.
-
-
-
-## Co wykonano:
-
-[x] Działający pre-processing i prosta segmentacja — zrealizowano w dwóch wariantach: automatyczny pre-processing wejścia modelu YOLO oraz klasyczny moduł ROI/HSV. W module klasycznym obraz jest wczytywany, wycinany jest obszar zainteresowania obejmujący płyn w butelce, a następnie wykonywana jest konwersja do przestrzeni HSV i proste progowanie pikseli na podstawie barwy oraz jasności.
-
-Pre-processing YOLO:
-- wczytanie obrazu,
-- skalowanie obrazu do rozmiaru wejściowego modelu,
-- normalizacja pikseli,
-- przygotowanie tensora wejściowego.
-
-Pre-processing klasyczny ROI/HSV:
-- wczytanie obrazu,
-- wycięcie obszaru zainteresowania ROI,
-- konwersja obrazu do przestrzeni HSV.
-
-Prosta segmentacja:
-- progowanie pikseli w ROI na podstawie jasności i koloru,
-- wykrywanie pikseli ciemnych oraz pikseli o brązowym odcieniu,
-- wyznaczenie cech takich jak `dark_ratio`, `brown_ratio`, `mean_saturation`, `mean_value`.
 
 
 ### Co wykonano
@@ -146,96 +124,7 @@ Najlepsze wagi modelu zapisano w pliku:
 
 Po treningu wykonano predykcję na zbiorze testowym zawierającym 300 obrazów. Wyniki zapisano w folderze `outputs/yolo_predictions`, a etykiety predykcji w folderze `outputs/yolo_predictions/labels`.
 
-
-Najważniejszy Fragment działania treningu
-
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       1/10         0G     0.5453      2.251      0.923         12        640: 100% ━━━━━━━━━━━━ 120/120 2.6s/it 5:07
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.1s/it 16.9s
-                   all        240        367      0.869       0.66      0.768      0.678
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       2/10         0G     0.4423      1.195     0.8543         11        640: 100% ━━━━━━━━━━━━ 120/120 2.5s/it 4:56
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.1s/it 17.0s
-                   all        240        367      0.936       0.89       0.92      0.794
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       3/10         0G     0.4072     0.9218     0.8389         13        640: 100% ━━━━━━━━━━━━ 120/120 2.4s/it 4:48
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.1s/it 16.5s
-                   all        240        367      0.989      0.906       0.98      0.844
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       4/10         0G     0.4076     0.7906     0.8394         12        640: 100% ━━━━━━━━━━━━ 120/120 2.5s/it 4:55
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.1s/it 16.3s
-                   all        240        367      0.981      0.978      0.991      0.894
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       5/10         0G     0.3694     0.6661     0.8267         10        640: 100% ━━━━━━━━━━━━ 120/120 2.4s/it 4:54
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.1s/it 16.2s
-                   all        240        367      0.962      0.988      0.991      0.888
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       6/10         0G     0.3396     0.5744     0.8164         12        640: 100% ━━━━━━━━━━━━ 120/120 2.5s/it 4:55
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.1s/it 16.1s
-                   all        240        367      0.958      0.989       0.99      0.907
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       7/10         0G     0.3087     0.5158     0.8013         12        640: 100% ━━━━━━━━━━━━ 120/120 2.6s/it 5:18
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.2s/it 18.0s
-                   all        240        367      0.973      0.998      0.995      0.923
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       8/10         0G      0.285     0.4626     0.7998         10        640: 100% ━━━━━━━━━━━━ 120/120 2.7s/it 5:19
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.2s/it 18.2s
-                   all        240        367       0.98      0.994      0.995      0.919
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-       9/10         0G     0.2794     0.4364     0.7989         13        640: 100% ━━━━━━━━━━━━ 120/120 2.7s/it 5:23
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.2s/it 17.8s
-                   all        240        367      0.983      0.997      0.995      0.935
-
-      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
-      10/10         0G     0.2583       0.41      0.792         10        640: 100% ━━━━━━━━━━━━ 120/120 2.7s/it 5:26
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.3s/it 19.6s
-                   all        240        367      0.978      0.998      0.995      0.937
-
-10 epochs completed in 0.900 hours.
-Optimizer stripped from D:\STUDIA MGR PW\TWM\TWM_Projekt\TWM_PROJEKT_26L\outputs\yolo_train\weights\last.pt, 6.2MB
-Optimizer stripped from D:\STUDIA MGR PW\TWM\TWM_Projekt\TWM_PROJEKT_26L\outputs\yolo_train\weights\best.pt, 6.2MB
-
-Validating D:\STUDIA MGR PW\TWM\TWM_Projekt\TWM_PROJEKT_26L\outputs\yolo_train\weights\best.pt...
-Ultralytics 8.4.45  Python-3.11.9 torch-2.11.0+cpu CPU (AMD Ryzen 7 5800H with Radeon Graphics)
-Model summary (fused): 73 layers, 3,007,013 parameters, 0 gradients, 8.1 GFLOPs
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100% ━━━━━━━━━━━━ 15/15 1.1s/it 16.7s
-                   all        240        367      0.978      0.998      0.995      0.937
-                  good        227        227      0.997          1      0.995      0.992
-          wrong_bottle         13         13      0.949          1      0.995      0.995
-           underfilled         40         40      0.983          1      0.995      0.958
-                no_cap         29         29      0.977          1      0.995      0.871
-             loose_cap         22         22      0.969          1      0.995      0.924
-                debris         23         23       0.97          1      0.995       0.99
-         damaged_label         13         13          1      0.986      0.995       0.83
-Speed: 1.0ms preprocess, 52.5ms inference, 0.0ms loss, 0.9ms postprocess per image
-Results saved to D:\STUDIA MGR PW\TWM\TWM_Projekt\TWM_PROJEKT_26L\outputs\yolo_train
-
-
-Przykładowy fragment działania predykcji:
-
-```text
-damaged_label_0004_20260210_151144.jpg: 1 good, 1 damaged_label
-debris_0000_20260210_150122.jpg: 1 good, 1 debris
-loose_cap_0001_20260210_152014.jpg: 1 good, 1 loose_cap
-no_cap_0002_20260210_145049.jpg: 1 good, 1 no_cap
-underfilled_0001_20260210_143737.jpg: 1 good, 1 underfilled
-wrong_bottle_0091_20260210_153331.jpg: 1 wrong_bottle
-
-
-
-
-
-
-
+Dodatkowo uruchomiono klasyczną metodę porównawczą ROI/HSV. Wyniki tej metody zapisano w folderze `outputs/classical_results`, a wartości obliczonych cech zapisano w pliku `classical_roi_hsv_results.csv`.
 
 
 ## ETAP 3: Wyniki, testy i raport końcowy

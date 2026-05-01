@@ -1,9 +1,23 @@
 
-W ramach Etapu 2 przygotowano strukturę danych zgodną z wymaganiami modeli YOLO. Oryginalny zbiór treningowy został podzielony na nowy zbiór treningowy oraz walidacyjny, natomiast oryginalny zbiór walidacyjny potraktowano jako niezależny zbiór testowy. Po reorganizacji danych uzyskano 960 obrazów treningowych, 240 obrazów walidacyjnych oraz 300 obrazów testowych.
+## Co wykonano:
 
-Następnie przeprowadzono prototypowy trening modelu YOLOv8n dla siedmiu klas występujących w zbiorze danych: `good`, `wrong_bottle`, `underfilled`, `no_cap`, `loose_cap`, `debris` oraz `damaged_label`. Model został dostrojony do zbioru *Water Bottle Defect-Level Detection Dataset* z wykorzystaniem uczenia transferowego. Trening wykonano przez 10 epok dla obrazów skalowanych do rozmiaru 640×640 px.
+[x] Działający pre-processing i prosta segmentacja — zrealizowano w dwóch wariantach: automatyczny pre-processing wejścia modelu YOLO oraz klasyczny moduł ROI/HSV. W module klasycznym obraz jest wczytywany, wycinany jest obszar zainteresowania obejmujący płyn w butelce, a następnie wykonywana jest konwersja do przestrzeni HSV i proste progowanie pikseli na podstawie barwy oraz jasności.
 
-Po zakończeniu treningu model osiągnął na zbiorze walidacyjnym następujące wyniki: Precision = 0.978, Recall = 0.998, mAP50 = 0.995 oraz mAP50-95 = 0.937. Najlepsze wagi modelu zapisano w pliku `outputs/yolo_train/weights/best.pt`.
+Pre-processing YOLO:
+- wczytanie obrazu,
+- skalowanie obrazu do rozmiaru wejściowego modelu,
+- normalizacja pikseli,
+- przygotowanie tensora wejściowego.
+
+Pre-processing klasyczny ROI/HSV:
+- wczytanie obrazu,
+- wycięcie obszaru zainteresowania ROI,
+- konwersja obrazu do przestrzeni HSV.
+
+Prosta segmentacja:
+- progowanie pikseli w ROI na podstawie jasności i koloru,
+- wykrywanie pikseli ciemnych oraz pikseli o brązowym odcieniu,
+- wyznaczenie cech takich jak `dark_ratio`, `brown_ratio`, `mean_saturation`, `mean_value`.
 
 
 Jak wyglądało w terminalu jak uruchomiłam yolo_train.py
@@ -161,3 +175,4 @@ val_batch0_labels.jpg	obrazy walidacyjne z prawdziwymi etykietami
 val_batch0_pred.jpg	te same obrazy walidacyjne, ale z predykcjami modelu
 val_batch1_labels.jpg, val_batch1_pred.jpg	kolejna porcja obrazów walidacyjnych: etykiety prawdziwe vs predykcje
 val_batch2_labels.jpg, val_batch2_pred.jpg	kolejna porcja walidacyjna
+

@@ -39,8 +39,8 @@ def main():
                 class_id = parts[0]
                 class_counter[class_id] += 1
 
-    print("Podsumowanie etykiet YOLO")
-    print("========================")
+    print("Podsumowanie etykiet YOLO:")
+    print()
     print(f"Liczba plików etykiet: {files_count}")
     print(f"Puste pliki etykiet:   {empty_files}")
     print()
