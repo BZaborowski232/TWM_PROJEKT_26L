@@ -1,0 +1,14 @@
+path: "D:/STUDIA MGR PW/TWM/TWM_Projekt/TWM_PROJEKT_26L/dataset_yolo"
+
+train: "train/images"
+val: "val/images"
+test: "test/images"
+
+names:
+  0: good
+  1: wrong_bottle
+  2: underfilled
+  3: no_cap
+  4: loose_cap
+  5: debris
+  6: damaged_label

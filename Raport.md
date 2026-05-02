@@ -93,8 +93,39 @@ W celu zapewnienia obiektywnego punktu odniesienia dla wyników sieci YOLO, zaim
 
 ## ETAP 2: Prototyp rozwiązania
 *(Do uzupełnienia do 6 maja)*
-* [ ] Kod implementujący wczytywanie wideo.
-* [ ] Działający pre-processing i prosta segmentacja.
+* [x] Wczytywanie i przetwarzanie obrazów ze zbioru danych.
+* [x] Działający pre-processing i prosta segmentacja.
+
+
+### Co wykonano
+
+W ramach Etapu 2 przygotowano działający prototyp systemu inspekcji optycznej butelek na podstawie zdjęć. Na tym etapie skupiono się na przygotowaniu danych, uruchomieniu modelu YOLO oraz wykonaniu prostej metody klasycznej opartej na analizie koloru w wybranym fragmencie obrazu.
+
+Przygotowano strukturę danych zgodną z wymaganiami YOLO. Oryginalny zbiór treningowy został podzielony na nowy zbiór treningowy i walidacyjny, a oryginalny zbiór walidacyjny wykorzystano jako zbiór testowy. Po podziale uzyskano 960 obrazów treningowych, 240 obrazów walidacyjnych oraz 300 obrazów testowych.
+
+Działający pre-processing został zrealizowany zarówno dla modelu YOLO, jak i dla metody klasycznej. W przypadku YOLO obraz jest wczytywany, skalowany do wymaganego rozmiaru oraz przygotowywany do analizy przez model. W przypadku metody klasycznej obraz jest wczytywany, wycinany jest obszar zainteresowania obejmujący płyn w butelce, a następnie fragment ten jest analizowany w przestrzeni barw HSV.
+
+Prosta segmentacja została wykonana w module ROI/HSV. Polega ona na sprawdzaniu pikseli w wybranym obszarze obrazu i określaniu, czy ich kolor lub jasność mogą wskazywać na zanieczyszczenie płynu. Na tej podstawie obliczane są cechy takie jak udział pikseli ciemnych, udział pikseli o odcieniu brązowym, średnie nasycenie oraz średnia jasność.
+
+Następnie przeprowadzono prototypowy trening modelu YOLOv8n dla siedmiu klas: `good`, `wrong_bottle`, `underfilled`, `no_cap`, `loose_cap`, `debris` oraz `damaged_label`. Model został dostrojony do zbioru *Water Bottle Defect-Level Detection Dataset*. Trening wykonano przez 10 epok.
+
+Po zakończeniu treningu model osiągnął na zbiorze walidacyjnym następujące wyniki:
+
+| Metryka   | Wartość |
+|---------  |---------|
+| Precision | 0.978   |
+| Recall    | 0.998   |
+| mAP50     | 0.995   |
+| mAP50-95  | 0.937   |
+
+Najlepsze wagi modelu zapisano w pliku:
+
+`outputs/yolo_train/weights/best.pt`
+
+Po treningu wykonano predykcję na zbiorze testowym zawierającym 300 obrazów. Wyniki zapisano w folderze `outputs/yolo_predictions`, a etykiety predykcji w folderze `outputs/yolo_predictions/labels`.
+
+Dodatkowo uruchomiono klasyczną metodę porównawczą ROI/HSV. Wyniki tej metody zapisano w folderze `outputs/classical_results`, a wartości obliczonych cech zapisano w pliku `classical_roi_hsv_results.csv`.
+
 
 ## ETAP 3: Wyniki, testy i raport końcowy
 *(Do uzupełnienia do 10 czerwca)*
