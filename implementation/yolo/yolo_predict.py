@@ -7,7 +7,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MODEL_PATH = PROJECT_ROOT / "outputs" / "yolo_train" / "weights" / "best.pt"
 SOURCE_DIR = PROJECT_ROOT / "dataset_yolo" / "test" / "images"
 
-# Ta implementacja wykorzystuje wytrenowany model YOLO do detekcji i klasyfikacji czystości wody na zdjęciach testowych. Wyniki są zapisywane w katalogu outputs/yolo_predictions.
+# Ta implementacja wykorzystuje wytrenowany model YOLO do detekcji i klasyfikacji czystości wody na zdjęciach testowych. 
+# Wyniki są zapisywane w katalogu outputs/yolo_predictions.
 
 
 def main():

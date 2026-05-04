@@ -2,7 +2,8 @@ from pathlib import Path
 from collections import Counter
 
 
-#ten plik sprawdza, ile klas ma dataset zeby je poprawenie zdefiniować w data.yaml, a także ile jest pustych plików etykiet, które mogą powodować błędy podczas treningu
+#ten plik sprawdza, ile klas ma dataset zeby je poprawenie zdefiniować w data.yaml, 
+# a także ile jest pustych plików etykiet, które mogą powodować błędy podczas treningu
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

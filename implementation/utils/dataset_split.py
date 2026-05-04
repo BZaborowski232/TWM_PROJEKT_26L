@@ -2,7 +2,9 @@ from pathlib import Path
 import shutil
 from sklearn.model_selection import train_test_split
 
-#ten plik wypełnmia katalog dataset_yolo obrazami i etykietami w strukturze zgodnej z wymaganiami YOLO. Dzieli oryginalny zbiór treningowy na nowy train i val, a oryginalny zbiór walidacyjny przenosi do test. Dzięki temu można łatwo trenować model YOLO na nowym zbiorze, a jednocześnie zachować oryginalny zbiór walidacyjny jako testowy.
+#ten plik wypełnmia katalog dataset_yolo obrazami i etykietami w strukturze zgodnej z wymaganiami YOLO. 
+# Dzieli oryginalny zbiór treningowy na nowy train i val, a oryginalny zbiór walidacyjny przenosi do test. 
+# Dzięki temu można łatwo trenować model YOLO na nowym zbiorze, a jednocześnie zachować oryginalny zbiór walidacyjny jako testowy.
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
