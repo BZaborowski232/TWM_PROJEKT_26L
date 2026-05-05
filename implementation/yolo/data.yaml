@@ -1,4 +1,4 @@
-path: "D:/STUDIA MGR PW/TWM/TWM_Projekt/TWM_PROJEKT_26L/dataset_yolo"
+path: ../../dataset_yolo
 
 train: "train/images"
 val: "val/images"
