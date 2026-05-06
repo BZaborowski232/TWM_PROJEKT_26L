@@ -7,3 +7,5 @@ outputs/
 runs/
 *.pt
 yolov8n.pt
+
+dataset_yolo/
