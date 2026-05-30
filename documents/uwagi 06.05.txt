@@ -1,0 +1,4 @@
+do rozwinięcia:
+- analiza macierzy pomyłek,
+- klasyczna metoda
+- przetestować modele na innych zdjęciach (niewymagane - nasza propozycja)
