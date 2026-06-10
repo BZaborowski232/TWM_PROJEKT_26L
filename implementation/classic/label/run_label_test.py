@@ -307,7 +307,7 @@ def main():
     )
 
     print(
-        "\n✅ Label test zakończony!"
+        "\nLabel test zakończony!"
     )
 
 

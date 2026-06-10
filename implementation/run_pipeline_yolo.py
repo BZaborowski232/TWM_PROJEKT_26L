@@ -45,7 +45,7 @@ def run_all():
     print("\n[4/4] YOLO prediction...")
     predict()
 
-    print("\n✅ YOLO pipeline zakończony!")
+    print("\nYOLO pipeline zakończony!")
 
 
 def main():

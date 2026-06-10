@@ -31,10 +31,10 @@ def main():
         for txt_path in label_dir.glob("*.txt"):
             files_count += 1
 
-            # wczytaj zawartość pliku
+            # wczytuje zawartość pliku
             content = txt_path.read_text(encoding="utf-8").strip()
 
-            # jeśli pusty → policz i pomiń
+            # jeśli pusty policz i pomiń
             if not content:
                 empty_files += 1
                 continue
@@ -53,7 +53,7 @@ def main():
                 # zwiększ licznik dla tej klasy
                 class_counter[class_id] += 1
 
-    # 🔷 podsumowanie
+    # podsumowanie
     print("Podsumowanie etykiet YOLO:")
     print()
 
@@ -67,7 +67,5 @@ def main():
     for class_id, count in sorted(class_counter.items(), key=lambda x: int(x[0])):
         print(f"klasa {class_id}: {count} obiektów")
 
-
-# uruchomienie skryptu
 if __name__ == "__main__":
     main()

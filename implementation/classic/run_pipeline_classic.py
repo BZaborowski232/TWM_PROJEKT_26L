@@ -377,7 +377,7 @@ def main():
     )
 
     print(
-        "\n✅ Classical pipeline zakończony!"
+        "\nClassical pipeline zakończony!"
     )
 
 

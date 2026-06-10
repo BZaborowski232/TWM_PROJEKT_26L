@@ -357,7 +357,7 @@ def main():
     )
 
     print(
-        "\n✅ CAP TEST FINISHED"
+        "\nCAP TEST FINISHED"
     )
 
 

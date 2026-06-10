@@ -292,7 +292,7 @@ def main():
     )
 
     print(
-        "\n✅ Debris test zakończony!"
+        "\nDebris test zakończony!"
     )
 
 

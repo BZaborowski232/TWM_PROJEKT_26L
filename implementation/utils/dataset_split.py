@@ -31,7 +31,7 @@ def recreate_output_dirs():
         for subdir in ["images", "labels"]:
             path = OUT / split / subdir
 
-            # usuń stare dane (jeśli istnieją)
+            # usuwa stare dane (jeśli istnieją)
             if path.exists():
                 shutil.rmtree(path)
 
@@ -105,7 +105,5 @@ def main():
     print(f"Nowy val:   {len(new_val)} obrazów")
     print(f"Nowy test:  {len(original_val_images)} obrazów")
 
-
-# uruchomienie skryptu
 if __name__ == "__main__":
     main()

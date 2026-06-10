@@ -25,10 +25,6 @@ PREDICTIONS_DIR = (
     / "yolo_predictions"
 )
 
-
-# Ta implementacja wykorzystuje wytrenowany model YOLO do detekcji i klasyfikacji czystości wody na zdjęciach testowych. 
-# Wyniki są zapisywane w katalogu outputs/yolo_predictions.
-
 from yolo.evaluate_yolo_prediction import (
     evaluate_yolo_predictions
 )
@@ -42,10 +38,8 @@ def main():
             f"Najpierw uruchom train_yolo.py"
         )
 
-    # wczytanie wytrenowanego modelu
     model = YOLO(str(MODEL_PATH))
 
-    # wykonanie predykcji
     model.predict(
         source=str(SOURCE_DIR),  # folder ze zdjęciami
         imgsz=640,               # rozmiar wejściowy obrazu
