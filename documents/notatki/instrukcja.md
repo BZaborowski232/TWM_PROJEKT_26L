@@ -2,10 +2,10 @@
 
 ## Uruchomienie modelu yolo i algorytmów klasycznych na danych testowych:
 
-Z poziomu folderu TWM_PROJEKT26L:
+Z poziomu najwyższego folderu:
 
-**predykcja modelu yolo:**
-python implementation\run_pipeline_yolo.py --step predict
+**trening i predykcja modelu yolo:**
+python implementation\run_pipeline_yolo.py
 
 **detekcja braku zakrętki:**
 python implementation\classic\cap\run_cap_test.py
