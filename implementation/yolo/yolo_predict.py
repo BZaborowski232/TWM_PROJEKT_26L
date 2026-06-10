@@ -1,3 +1,4 @@
+
 from pathlib import Path
 from ultralytics import YOLO
 
@@ -11,9 +12,26 @@ MODEL_PATH = PROJECT_ROOT / "outputs" / "yolo_train" / "weights" / "best.pt"
 # katalog ze zdjęciami testowymi
 SOURCE_DIR = PROJECT_ROOT / "dataset_yolo" / "test" / "images"
 
+TEST_LABELS_DIR = (
+    PROJECT_ROOT
+    / "dataset_yolo"
+    / "test"
+    / "labels"
+)
+
+PREDICTIONS_DIR = (
+    PROJECT_ROOT
+    / "outputs"
+    / "yolo_predictions"
+)
+
+
 # Ta implementacja wykorzystuje wytrenowany model YOLO do detekcji i klasyfikacji czystości wody na zdjęciach testowych. 
 # Wyniki są zapisywane w katalogu outputs/yolo_predictions.
 
+from yolo.evaluate_yolo_prediction import (
+    evaluate_yolo_predictions
+)
 
 # używa wytrenowanego modelu do predykcji na obrazach testowych
 def main():
@@ -38,6 +56,49 @@ def main():
         project=str(PROJECT_ROOT / "outputs"),  # katalog wyników
         name="yolo_predictions", # folder wynikowy
         exist_ok=True            # nie nadpisuje błędem istniejącego folderu
+    )
+
+
+
+    print(
+    "\nEvaluating predictions..."
+)
+
+    metrics = evaluate_yolo_predictions(
+
+        test_labels_dir=
+        TEST_LABELS_DIR,
+
+        pred_labels_dir=
+        PREDICTIONS_DIR
+        / "labels",
+
+        output_dir=
+        PREDICTIONS_DIR
+    )
+
+    print(
+        "\n===== YOLO RESULTS ====="
+    )
+
+    print(
+        f"Accuracy : "
+        f"{metrics['accuracy']:.4f}"
+    )
+
+    print(
+        f"Precision: "
+        f"{metrics['precision']:.4f}"
+    )
+
+    print(
+        f"Recall   : "
+        f"{metrics['recall']:.4f}"
+    )
+
+    print(
+        f"F1-score : "
+        f"{metrics['f1']:.4f}"
     )
 
 

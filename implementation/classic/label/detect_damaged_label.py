@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 
-SATURATION_THRESHOLD = 60
-EDGE_THRESHOLD = 0.06
-STD_GRAY_THRESHOLD = 29
+
+LABEL_PRESENT_THRESHOLD = 0.03
+
 
 def get_label_roi(image, bottle_bbox):
 
@@ -20,11 +20,11 @@ def get_label_roi(image, bottle_bbox):
 
     bx, by, bw, bh = bottle_bbox
 
-    x1 = bx
-    x2 = bx + bw
+    y1 = by + int(bh * 0.29)
+    y2 = by + int(bh * 0.45)
 
-    y1 = by + int(bh * 0.25)
-    y2 = by + int(bh * 0.60)
+    x1 = bx + int(bw * 0.10)
+    x2 = bx + int(bw * 0.90)
 
     return (
         x1,
@@ -34,9 +34,15 @@ def get_label_roi(image, bottle_bbox):
     )
 
 
-def detect_damaged_label(image,bottle_bbox=None):
+def detect_damaged_label(
+    image,
+    bottle_bbox=None
+):
 
-    x1, y1, x2, y2 = get_label_roi(image,bottle_bbox)
+    x1, y1, x2, y2 = get_label_roi(
+        image,
+        bottle_bbox
+    )
 
     roi = image[y1:y2, x1:x2]
 
@@ -45,65 +51,80 @@ def detect_damaged_label(image,bottle_bbox=None):
         cv2.COLOR_BGR2HSV
     )
 
-    saturation = hsv[:, :, 1]
+    # --------------------------------------------------
+    # Szukanie niebieskiego fragmentu etykiety
+    # --------------------------------------------------
 
-    mean_saturation = float(
-        np.mean(saturation)
-    )
-
-    gray = cv2.cvtColor(
-        roi,
-        cv2.COLOR_BGR2GRAY
-    )
-
-    std_gray = float(
-        np.std(gray)
-    )   
-
-    edges = cv2.Canny(
-        gray,
+    lower_blue = np.array([
+        95,
         50,
-        150
+        20
+    ])
+
+    upper_blue = np.array([
+        140,
+        255,
+        255
+    ])
+
+    blue_mask = cv2.inRange(
+        hsv,
+        lower_blue,
+        upper_blue
     )
 
-    edge_ratio = (
-        np.count_nonzero(edges)
-        / edges.size
+    blue_ratio = (
+        np.count_nonzero(blue_mask)
+        / blue_mask.size
     )
 
-    std_saturation = np.std(
-    hsv[:, :, 1]
+    # --------------------------------------------------
+    # Największe skupisko niebieskiego
+    # --------------------------------------------------
+
+    contours, _ = cv2.findContours(
+        blue_mask,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE
     )
 
-    damaged = (
-        std_gray < STD_GRAY_THRESHOLD
-        and
-        mean_saturation < SATURATION_THRESHOLD
+    largest_blue_area = 0
+
+    for cnt in contours:
+
+        area = cv2.contourArea(cnt)
+
+        if area > largest_blue_area:
+            largest_blue_area = area
+
+    largest_blue_ratio = (
+        largest_blue_area
+        / (roi.shape[0] * roi.shape[1])
     )
 
-    score = max(
-        max(
-            0,
-            SATURATION_THRESHOLD - mean_saturation
-        ) / SATURATION_THRESHOLD,
+    # --------------------------------------------------
+    # Decyzja
+    # --------------------------------------------------
 
-        max(
-            0,
-            EDGE_THRESHOLD - edge_ratio
-        ) / EDGE_THRESHOLD
+    label_present = (
+        largest_blue_ratio >
+        LABEL_PRESENT_THRESHOLD
     )
+
+    damaged = not label_present
 
     confidence = min(
-        score,
+        largest_blue_ratio
+        / LABEL_PRESENT_THRESHOLD,
         1.0
     )
 
     return {
 
         "label":
-            "damaged_label"
-            if damaged
-            else "good",
+            "good"
+            if label_present
+            else "damaged_label",
 
         "damaged":
             damaged,
@@ -111,17 +132,11 @@ def detect_damaged_label(image,bottle_bbox=None):
         "confidence":
             float(confidence),
 
-        "mean_saturation":
-            float(mean_saturation),
+        "blue_ratio":
+            float(blue_ratio),
 
-        "edge_ratio":
-            float(edge_ratio),
-
-        "std_saturation":
-            float(std_saturation),
-
-        "std_gray":
-            float(std_gray),
+        "largest_blue_ratio":
+            float(largest_blue_ratio),
 
         "roi_x1": x1,
         "roi_y1": y1,
@@ -158,6 +173,7 @@ def draw_damaged_label_result(
 
     text = (
         f"{result['label']} "
+        f"blue={result['largest_blue_ratio']:.3f} "
         f"conf={result['confidence']:.2f}"
     )
 

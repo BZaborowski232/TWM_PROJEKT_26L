@@ -229,17 +229,23 @@ def main():
         "confidence":
             label_result["confidence"],
 
-        "mean_saturation":
-            label_result["mean_saturation"],
+        # "mean_saturation":
+        #     label_result["mean_saturation"],
 
-        "edge_ratio":
-            label_result["edge_ratio"],
+        # "edge_ratio":
+        #     label_result["edge_ratio"],
 
-        "std_saturation":
-            label_result["std_saturation"],
+        # "std_saturation":
+        #     label_result["std_saturation"],
 
-        "std_gray":
-            label_result["std_gray"]
+        # "std_gray":
+        #     label_result["std_gray"],
+
+        "blue_ratio":
+            label_result["blue_ratio"],
+
+        "largest_blue_ratio":
+            label_result["largest_blue_ratio"],
 
     })
 

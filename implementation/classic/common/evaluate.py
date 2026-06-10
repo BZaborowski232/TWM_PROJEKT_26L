@@ -87,7 +87,9 @@ def save_confusion_matrix(
         display_labels=supported_classes
     )
 
-    disp.plot()
+    disp.plot(
+    xticks_rotation=90
+        )
 
     plt.tight_layout()
 

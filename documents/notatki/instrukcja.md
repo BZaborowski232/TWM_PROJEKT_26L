@@ -1,5 +1,21 @@
 # System Inspekcji Butelek – Instrukcja
 
+## Uruchomienie modelu yolo i algorytmów klasycznych na danych testowych:
+
+Z poziomu folderu TWM_PROJEKT26L:
+
+**predykcja modelu yolo:**
+python implementation\run_pipeline_yolo.py --step predict
+
+**detekcja braku zakrętki:**
+python implementation\classic\cap\run_cap_test.py
+
+**detekcja zanieczyszczeń:**
+python implementation\classic\debris\run_debris_test.py
+
+**detekcja etykiety:**
+python implementation\classic\label\run_label_test.py
+
 ## Opis modułów
 
 ### `common/bottle_detector.py`
@@ -43,9 +59,10 @@ Klasyczna detekcja obecności zakrętki.
 
 Wykorzystuje:
 
-* bbox butelki
-* analizę koloru zakrętki w przestrzeni HSV
-* analizę rozmiaru wykrytego obszaru
+* Wyznaczenie ROI w górnej części butelki.
+* Analiza koloru zakrętki.
+* Obliczenie udziału pikseli odpowiadających kolorowi zakrętki.
+* Porównanie z ustalonym progiem.
 
 Klasy:
 
@@ -60,9 +77,11 @@ Klasyczna detekcja zanieczyszczeń.
 
 Wykorzystuje:
 
-* analizę kolorów
-* analizę ciemnych obszarów
-* analizę ROI
+* Wyznaczenie ROI wewnątrz butelki.
+* Konwersja do przestrzeni HSV.
+* Segmentacja pikseli odpowiadających zanieczyszczeniom.
+* Obliczenie procentu zajętej powierzchni.
+* Porównanie z progiem.
 
 Klasy:
 
@@ -77,63 +96,49 @@ Klasyczna detekcja uszkodzonej lub brakującej etykiety.
 
 Wykorzystuje:
 
-* ROI etykiety wyznaczone na podstawie bbox butelki
-* średnie nasycenie (`mean_saturation`)
-* odchylenie standardowe nasycenia (`std_saturation`)
-* odchylenie standardowe jasności (`std_gray`)
+* Wyznaczenie ROI w miejscu występowania etykiety.
+* Analiza kolorów charakterystycznych dla etykiety.
+* Obliczenie udziału pikseli należących do etykiety.
+* Porównanie z ustalonym progiem.
 
 Klasy:
 
 * `good`
 * `damaged_label`
 
----
-
-### `fill_level/detect_fill_level.py`
-
-Moduł przeznaczony do wykrywania poziomu napełnienia butelki.
-
-Obecnie znajduje się w trakcie rozwoju.
 
 ---
 
 ### `yolo/yolo_train.py`
 
-Skrypt do trenowania modelu YOLO.
+1. Wczytanie obrazów i anotacji YOLO.
+2. Przekazanie obrazów do sieci YOLO.
+3. Predykcja klas i bounding boxów.
+4. Porównanie predykcji z anotacjami.
+5. Obliczenie funkcji strat (box loss, cls loss, dfl loss).
+6. Aktualizacja wag modelu metodą backpropagation.
+7. Powtarzanie procesu przez kolejne epoki.
+8. Walidacja modelu po każdej epoce.
+9. Zapis modelu o najlepszych wynikach walidacyjnych (best.pt).
 
 ---
 
 ### `yolo/yolo_predict.py`
 
-Skrypt do wykonywania predykcji przy użyciu wytrenowanego modelu YOLO.
+1. Wczytanie obrazu.
+2. Przeskalowanie do rozmiaru wejściowego modelu.
+3. Przepuszczenie obrazu przez wytrenowaną sieć YOLO.
+4. Wykrycie obiektów (bounding box).
+5. Klasyfikacja wykrytego obiektu do jednej z klas:
+    * good
+    * wrong_bottle
+    * underfilled
+    * no_cap
+    * loose_cap
+    * debris
+    * damaged_label
+6. Zwrot klasy, współczynnika pewności oraz bbox.
 
----
-
-## Uruchamianie testów dla klasycznych metod
-
-Przed uruchomieniem przejść do katalogu:
-
-```bash
-implementation/classic
-```
-
-### Detekcja zakrętki
-
-```bash
-python cap/run_cap_test.py
-```
-
-### Detekcja zanieczyszczeń
-
-```bash
-python debris/run_debris_test.py
-```
-
-### Detekcja etykiety
-
-```bash
-python label/run_label_test.py
-```
 
 ---
 
